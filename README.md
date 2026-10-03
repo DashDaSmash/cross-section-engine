@@ -13,6 +13,24 @@ A high-performance C++20 application designed to explore low-level hardware opti
 
 ---
 
+## How to Run
+
+# 1. Create and enter build directory
+```powershell
+# 1. Create and enter build directory
+mkdir build
+cd build
+
+# 2. Generate Visual Studio project files
+cmake ..
+
+# 3. Compile in Release mode
+cmake --build . --config Release
+
+# 4. Run the executable
+.\Release\cross_section_engine.exe
+```
+
 ## Directory Structure
 ```text
 cross_section_engine/

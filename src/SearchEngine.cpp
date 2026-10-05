@@ -1,4 +1,22 @@
 #include "SearchEngine.hpp"
+#include <algorithm>
+#include <iterator>
+#include <immintrin.h>
+
+#if defined(_MSC_VER)
+#include <intrin.h>
+#endif
+
+static inline unsigned long countTrailingZeros(unsigned int mask)
+{
+#if defined(_MSC_VER)
+    unsigned long index;
+    _BitScanForward(&index, mask);
+    return index;
+#else
+    return static_cast<unsigned long>(__builtin_ctz(mask));
+#endif
+}
 
 std::optional<std::size_t> SearchEngine::linearSearch(std::span<const double> energies, double targetEnergy)
 {
@@ -50,13 +68,8 @@ std::optional<std::size_t> SearchEngine::simdSearch(std::span<const double> ener
 
         if (mask != 0)
         {
-            for (int lane = 0; lane < 4; ++lane)
-            {
-                if (mask & (1 << lane))
-                {
-                    return index + static_cast<std::size_t>(lane);
-                }
-            }
+            unsigned long lane = countTrailingZeros(static_cast<unsigned int>(mask));
+            return index + static_cast<std::size_t>(lane);
         }
     }
 
